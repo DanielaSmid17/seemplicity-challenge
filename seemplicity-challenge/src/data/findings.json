@@ -1,0 +1,12 @@
+[
+    {"title": "Dashboard debbug", "description": "The dashboard is re-rendering too many times", "ticket": null},
+    {"title": "Icons", "description": "Change icons to svg", "ticket": {"provider": "monday", "id": 9009}},
+    {"title": "Pacman", "description": "To many ghosts trying to chase me", "ticket": null},
+    {"title": "Download feature", "description": "Create download feature in dashboard table", "ticket": null},
+    {"title": "Sign up bug", "description": "Sign up page is jumpy", "ticket": null},
+    {"title": "Mario", "description": "Peach needs to be rescued", "ticket": {"provider": "service_now", "id": 7588}},
+    {"title": "Search bar autocomplete", "description": "Autocomplete is not working properly", "ticket": {"provider": "jira", "id": 1663}},
+    {"title": "ChatGPT", "description": "Delete it, it will replace us all", "ticket": null},
+    {"title": "Error in profile page", "description": "When opening profile page, 404 error is showing", "ticket": null},
+    {"title": "Cut and paste", "description": "Ctrl C + Control V not working", "ticket": null}
+]
