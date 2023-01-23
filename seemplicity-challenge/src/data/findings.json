@@ -6,7 +6,7 @@
     {"title": "Sign up bug", "description": "Sign up page is jumpy", "ticket": null},
     {"title": "Mario", "description": "Peach needs to be rescued", "ticket": {"provider": "service_now", "id": 7588}},
     {"title": "Search bar autocomplete", "description": "Autocomplete is not working properly", "ticket": {"provider": "jira", "id": 1663}},
-    {"title": "ChatGPT", "description": "Delete it, it will replace us all", "ticket": null},
+    {"title": "ChatGPT", "description": "Delete it, it will replace us all, I'm scared", "ticket": null},
     {"title": "Error in profile page", "description": "When opening profile page, 404 error is showing", "ticket": null},
-    {"title": "Cut and paste", "description": "Ctrl C + Control V not working", "ticket": null}
+    {"title": "Cut and paste", "description": "Ctrl C + Ctrl V not working", "ticket": null}
 ]

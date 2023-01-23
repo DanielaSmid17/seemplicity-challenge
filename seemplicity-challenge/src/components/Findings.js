@@ -1,14 +1,64 @@
-import React, { Fragment } from 'react'
+import React, { useEffect, useState } from 'react'
 import findings from '../data/findings.json'
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper } from '@mui/material';
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper, IconButton, Snackbar, Alert } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { MondaySmall } from '../icons/MondaySmall';
 import { JiraSmall } from '../icons/JiraSmall';
 import { ServiceNowSmall } from '../icons/ServiceNowSmall';
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux';
+import { openTicketModal, closeTicketModal } from './store/slices/ticketModalSlice';
+import TicketModal from './TicketModal';
+import MockAdapter from "axios-mock-adapter";
+import axios from 'axios';
+
 
 const Findings = () => {
-    const rows = findings;
+    
+   
+    
+    const [rows, setRows] = useState([])
+    const [openSnackbar, setOpenSnackbar] = useState([])
+    const mock = new MockAdapter(axios);
 
+
+    const { isTicketModalOpen } = useSelector((state) => state.ticketModal);
+    const dispatch = useDispatch()
+
+    const handleCloseModal = () => {
+        dispatch(closeTicketModal());
+    };
+
+    const handleOpenModal = (row, i) => {
+        dispatch(openTicketModal({row, i}));
+    };
+
+    useEffect(() => {
+      getFindings()
+    }, [])
+
+    const getFindings = async () => {
+        mock.onGet("/").reply(200, {
+            findings: findings,
+          });
+          
+        await axios.get("/").then(function (response) {
+            setRows(response.data.findings);
+          });
+    }
+
+    const createTicket = async (newTicket, idx) => {
+        mock.onAny("/").reply(200);
+        
+          
+        await axios.put("/").then(function (response) {
+            const rowsCopy = [...rows]
+            rowsCopy[idx] = newTicket
+            setRows(rowsCopy)
+            setOpenSnackbar(true)
+          });
+    }
+    
 
     const ticketRender = (ticket) => {
         switch(ticket.provider) {
@@ -32,10 +82,29 @@ const Findings = () => {
                 break;
         }
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSnackbar(false);
+      };
+    
+      const action = (
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+      );
       
 
   return (
-    <div style={{backgroundColor: '#F9F9FB', padding: '10px'}}>
+    <div style={{padding: '10px'}}>
         <div style={{padding: '10px 15px'}}>
             <Typography align='left' sx={{fontSize: "30px", fontWeight: 600}}>Findings</Typography>
         </div>
@@ -51,21 +120,30 @@ const Findings = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, i) => (
+          {rows?.map((row, i) => (
               <TableRow
-              key={row.i}
+              key={i}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {row.title}
               </TableCell>
               <TableCell align="left">{row.description}</TableCell>
-              <TableCell align="left">{row.ticket ? ticketRender(row.ticket) : <Button sx={{textTransform: 'none'}}>Create ticket</Button>}</TableCell>
+              <TableCell align="left">{row.ticket ? ticketRender(row.ticket) : <Button onClick={()=> handleOpenModal(row, i)} sx={{textTransform: 'none', padding: 0}}>Create ticket</Button>}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        action={action}
+      >
+        <Alert severity="success">Ticket updated successfully!</Alert>
+    </Snackbar>
+    {isTicketModalOpen && <TicketModal open={isTicketModalOpen} handleClose={handleCloseModal} createTicket={createTicket} />}
     </div>
   )
 }
