@@ -14,49 +14,48 @@ import axios from 'axios';
 
 
 const Findings = () => {
-    
-   
-    
     const [rows, setRows] = useState([])
-    const [openSnackbar, setOpenSnackbar] = useState([])
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    
     const mock = new MockAdapter(axios);
-
-
+    mock.onGet("/").reply(200, {findings: findings})
+    
     const { isTicketModalOpen } = useSelector((state) => state.ticketModal);
     const dispatch = useDispatch()
-
+    
     const handleCloseModal = () => {
         dispatch(closeTicketModal());
     };
-
+    
     const handleOpenModal = (row, i) => {
         dispatch(openTicketModal({row, i}));
     };
-
+    
     useEffect(() => {
-      getFindings()
+        getFindings()
     }, [])
-
+    
     const getFindings = async () => {
-        mock.onGet("/").reply(200, {
-            findings: findings,
-          });
-          
-        await axios.get("/").then(function (response) {
-            setRows(response.data.findings);
-          });
+        const {data} = await axios.get("/")
+        setRows(data.findings)  
     }
-
-    const createTicket = async (newTicket, idx) => {
-        mock.onAny("/").reply(200);
+    
+    const createTicket = async (updatedFinding, idx) => {
+        mock.onPut(`/findings/${updatedFinding.id}`, updatedFinding).reply(200, updatedFinding);
         
-          
-        await axios.put("/").then(function (response) {
+        const response = await axios.put(`/findings/${updatedFinding.id}`, updatedFinding)
+
+        if(response.status == 200 && response.data){
             const rowsCopy = [...rows]
-            rowsCopy[idx] = newTicket
+            rowsCopy[idx] = response.data
             setRows(rowsCopy)
-            setOpenSnackbar(true)
-          });
+    
+            setTimeout(() => {
+                setOpenSnackbar(true)
+                
+            }, 1000); 
+        }
+        
     }
     
 
@@ -135,14 +134,14 @@ const Findings = () => {
         </TableBody>
       </Table>
     </TableContainer>
-    <Snackbar
+    {openSnackbar && <Snackbar
         open={openSnackbar}
         autoHideDuration={4000}
         onClose={handleClose}
         action={action}
       >
         <Alert severity="success">Ticket updated successfully!</Alert>
-    </Snackbar>
+    </Snackbar>}
     {isTicketModalOpen && <TicketModal open={isTicketModalOpen} handleClose={handleCloseModal} createTicket={createTicket} />}
     </div>
   )

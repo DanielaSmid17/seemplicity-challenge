@@ -23,9 +23,11 @@ import { Jira } from '../icons/Jira';
 import { Monday } from '../icons/Monday';
 import { ServiceNow } from '../icons/ServiceNow';
 
-const jiraProjects = ['Frontend', 'Backend', 'UX/UI']
-const mondayProjects = ['Tuesday', 'Wednesday', 'Thursday']
-const serviceNowProjects = ['IT', 'Customer', 'Employee']
+const projects = {
+  jira: ['Frontend', 'Backend', 'UX/UI'],
+  monday: ['Tuesday', 'Wednesday', 'Thursday'],
+  service_now: ['IT', 'Customer', 'Employee']
+}
 const issueTypes = ['Bug', 'Story', 'Type']
 const providers = ['monday', 'service_now', 'jira']
 
@@ -56,40 +58,37 @@ const providers = ['monday', 'service_now', 'jira']
   };
 
   const validating = () => {
+      
     if (!title || typeof title != 'string'){
-      console.log('entro title')
       return false
     } 
     else if (!description || typeof description != 'string'){
-      console.log('entro des')
       return false  
     } 
     else if (!provider || !(providers.includes(provider))){
-      console.log('entro prov')
       return false
       
     } 
-    else if (!projectSelected ){
-      console.log('entro proj', projectSelected, mondayProjects)
+    else if (!projects[provider].includes(projectSelected)){
       return false
-      
-    } 
+    }
     else if (!issueSelected || !(issueTypes.includes(issueSelected))){
-      console.log('entro issue')
       return false
     } 
-    else return true
+
+    return true
   }
 
   const generateTicket = () => {
     const validated = validating();
     if (validated) {
-      const newTicket = {
+      const updatedFinding = {
+        id: info.id,
         title,
         description,
         ticket: {id: generateId(), provider, project: projectSelected, issue: issueSelected}
       }
-      createTicket(newTicket, idx);
+      createTicket(updatedFinding, idx);
       handleClose();
     }
 
@@ -152,7 +151,7 @@ const providers = ['monday', 'service_now', 'jira']
                     value={mondayProject}
                     onChange={handleMondayChange}
                   > 
-                  { mondayProjects.map(project => (
+                  { projects.monday.map(project => (
                     <MenuItem key={project} value={project}>{project}</MenuItem>
                   )) }
                     
@@ -163,7 +162,7 @@ const providers = ['monday', 'service_now', 'jira']
                     value={jiraProject}
                     onChange={handleJiraChange}
                   > 
-                  { jiraProjects.map(project => (
+                  { projects.jira.map(project => (
                     <MenuItem key={project} value={project}>{project}</MenuItem>
                   )) }
                     
@@ -174,7 +173,7 @@ const providers = ['monday', 'service_now', 'jira']
                     value={serviceNowProject}
                     onChange={handleServiceNowChange}
                   > 
-                  { serviceNowProjects.map(project => (
+                  { projects.service_now.map(project => (
                     <MenuItem key={project} value={project}>{project}</MenuItem>
                   )) }
                     
@@ -227,7 +226,7 @@ const providers = ['monday', 'service_now', 'jira']
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} sx={{width: '120px', borderRadius: '40px', border: '1px solid black', color: '#000000', textTransform: 'none'}}>Cancel</Button>
-          <Button onClick={generateTicket} sx={{width: '120px', borderRadius: '40px', backgroundColor: '#B0BCFD', color: '#fff', textTransform: 'none', '&:hover': {backgroundColor: '#B0BCFD', opacity: .9}}}>
+          <Button onClick={generateTicket} disabled={!validating()} sx={{width: '120px', borderRadius: '40px', backgroundColor: '#B0BCFD', color: '#fff', textTransform: 'none', '&:hover': {backgroundColor: '#B0BCFD', opacity: .9}}}>
             Create Ticket
           </Button>
         </DialogActions>
