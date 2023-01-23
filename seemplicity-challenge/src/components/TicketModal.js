@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -32,17 +33,21 @@ const issueTypes = ['Bug', 'Story', 'Type']
 const providers = ['monday', 'service_now', 'jira']
 
  const TicketModal = ({open, handleClose, createTicket}) => {
+  // initial states
   const [provider, setProvider] = useState(providers[0])
   const [projectSelected, setProjectSelected] = useState(null)
   const [mondayProject, setMondayProject] = useState(null)
   const [jiraProject, setJiraProject] = useState(null)
   const [serviceNowProject, setServiceNowProject] = useState(null)
   const [issueSelected, setIssueSelected] = useState(null)
-  
-  const info = useSelector(state => state.ticketModal.info)
-  const idx = useSelector(state => state.ticketModal.idx)
   const [title, setTitle]  = useState(info.title)
   const [description, setDescription]  = useState(info.description)
+  
+  // redux ticket info
+  const info = useSelector(state => state.ticketModal.info)
+  const idx = useSelector(state => state.ticketModal.idx)
+
+  // handling choosing project 
 
   const handleMondayChange = (event) => {
     setMondayProject(event.target.value);
@@ -56,6 +61,8 @@ const providers = ['monday', 'service_now', 'jira']
     setServiceNowProject(event.target.value);
     setProjectSelected(event.target.value)
   };
+
+  // validating nad submitting updated finding (with new ticket)
 
   const validating = () => {
       
