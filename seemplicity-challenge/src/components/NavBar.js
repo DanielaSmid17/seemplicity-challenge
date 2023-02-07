@@ -52,7 +52,7 @@ export default function NavBar() {
             textDecoration: 'none',
           }}
         >
-          Seemplicity
+          My company
         </Typography>
 
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -122,7 +122,7 @@ export default function NavBar() {
           ))}
         </Box>
 
-        <Typography sx={{marginRight: '5px'}}>Dani@seemplicity.io</Typography>
+        <Typography sx={{marginRight: '5px'}}>Dani@mycompany.io</Typography>
         <Box sx={{ flexGrow: 0 }}>
             <IconButton sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

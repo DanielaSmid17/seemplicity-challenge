@@ -32,7 +32,10 @@ const projects = {
 const issueTypes = ['Bug', 'Story', 'Type']
 const providers = ['monday', 'service_now', 'jira']
 
- const TicketModal = ({open, handleClose, createTicket}) => {
+const TicketModal = ({open, handleClose, createTicket}) => {
+   // redux ticket info
+   const info = useSelector(state => state.ticketModal.info)
+   const idx = useSelector(state => state.ticketModal.idx)
   // initial states
   const [provider, setProvider] = useState(providers[0])
   const [projectSelected, setProjectSelected] = useState(null)
@@ -43,9 +46,6 @@ const providers = ['monday', 'service_now', 'jira']
   const [title, setTitle]  = useState(info.title)
   const [description, setDescription]  = useState(info.description)
   
-  // redux ticket info
-  const info = useSelector(state => state.ticketModal.info)
-  const idx = useSelector(state => state.ticketModal.idx)
 
   // handling choosing project 
 
